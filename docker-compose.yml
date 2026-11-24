@@ -1,0 +1,17 @@
+services:
+  weatherdash:
+    image: ghcr.io/dartmoordunbar/weatherdash:latest
+    container_name: weatherdash
+    restart: unless-stopped
+    # Host networking lets the container hear the station's UDP broadcast
+    # (live wind every 2.5 s). The dashboard is then on port 8080 of this machine.
+    network_mode: host
+    environment:
+      WLL_HOST: 192.168.1.47          # your WeatherLink Live's IP address
+      STATION_NAME: Home Station
+      TZ: Europe/London               # so "today" and rain totals reset at your midnight
+      # Optional: backfill gaps from WeatherLink.com (needs a Pro subscription)
+      # WL_API_KEY: your-key
+      # WL_API_SECRET: your-secret
+    volumes:
+      - ./data:/data                  # weather.db lives here

@@ -52,6 +52,26 @@ sudo systemctl enable --now weatherdash
 journalctl -u weatherdash -f      # watch the log
 ```
 
+## Or run it in Docker
+
+Every push to `main` builds an image for amd64, arm64 and armv7 (Raspberry Pi), and publishes it as `ghcr.io/dartmoordunbar/weatherdash:latest`. Tags like `v1.2.0` also publish `1.2.0` and `1.2`.
+
+Edit the station address in `docker-compose.yml`, then:
+
+```bash
+docker compose up -d
+```
+
+The compose file uses **host networking**, because the station's live-wind broadcast is UDP and doesn't reach a container on Docker's default bridge network. Readings are kept in `./data/weather.db`. Set `TZ` so "today" and the daily rain totals reset at your local midnight.
+
+Plain `docker run` works too:
+
+```bash
+docker run -d --name weatherdash --restart unless-stopped --network host \
+  -e WLL_HOST=192.168.1.47 -e TZ=Europe/London -v "$PWD/data:/data" \
+  ghcr.io/dartmoordunbar/weatherdash:latest
+```
+
 ## Settings
 
 | Flag | Env var | Default | |

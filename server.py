@@ -18,6 +18,7 @@ import json
 import logging
 import os
 import queue
+import signal
 import socket
 import sqlite3
 import threading
@@ -601,6 +602,8 @@ def main():
         threading.Thread(target=target, daemon=True).start()
 
     srv = ThreadingHTTPServer((cfg.bind, cfg.port), make_handler(station, db, hub))
+    # Docker sends SIGTERM on stop; as PID 1 Python would otherwise ignore it.
+    signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt))
     srv.daemon_threads = True
     log.info("dashboard on http://%s:%s", "localhost" if cfg.bind == "0.0.0.0" else cfg.bind, cfg.port)
     try:
