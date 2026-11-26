@@ -132,7 +132,6 @@
   <div class="tiles">
     <section class="card"><div class="label">Humidity</div><div class="val" id="hum">—</div><div class="bar"><div id="humBar"></div></div></section>
     <section class="card"><div class="label">Rain today</div><div class="val" id="rain">—</div><div class="note" id="rate">—</div></section>
-    <section class="card"><div class="label">Indoor</div><div class="val" id="inT">—</div><div class="note" id="health">—</div></section>
   </div>
 
   <section class="card">
@@ -223,9 +222,6 @@
     const rainDay = ok(c.rain_day_mm) ? c.rain_day_mm : t.rain;
     $("rain").innerHTML = ok(rainDay) ? `${f(R(rainDay), rd())}<small> ${u.r}</small>` : "—";
     $("rate").textContent = `Rate ${f(R(c.rain_rate_mmh), rd())} ${u.r}/h`;
-    $("inT").innerHTML = ok(c.in_temp_c) ? `${f(T(c.in_temp_c))}°<small>${ok(c.in_hum) ? " · " + Math.round(c.in_hum) + "%" : ""}</small>` : "—";
-    $("health").textContent = c.battery_low ? "ISS battery low" : "ISS battery OK";
-    $("health").style.color = c.battery_low ? "var(--bad)" : "";
     renderStatus();
     renderBanner();
   }
